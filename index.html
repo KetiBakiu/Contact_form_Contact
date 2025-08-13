@@ -13,12 +13,14 @@
       --bg-1: #fbfdf6;
       --bg-2: #f3f8e5;
       --card: #ffffff;
-      --stroke: #e0e8c7;   /* pak më e dukshme se më parë */
-      --stroke-strong: #c9d59e;
+      --stroke: #d8e2bb;
+      --stroke-strong: #c0cf93;
       --shadow: 0 10px 30px rgba(40, 60, 0, .08);
       --radius-xl: 18px;
       --radius-md: 12px;
     }
+
+    * , *::before, *::after{ box-sizing: border-box; }
 
     body{
       margin:0; min-height:100svh; display:grid; place-items:center;
@@ -50,26 +52,12 @@
     form{ padding: 28px; display:grid; gap:22px; }
 
     /* === GRID FIX: clear separation between columns and rows === */
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 28px;   /* më i madh që të mos takohen */
-      row-gap: 18px;
-    }
-    @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; column-gap: 0; } }
+    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; gap: 16px; } }
 
-    .field{ position:relative; }
+    .field{ position:relative; margin:0; }
 
-    .input, textarea{
-      width:100%;
-      padding: 16px 14px 14px;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--stroke); /* pak më e trashë për kontrast */
-      background: #fff;
-      color: var(--ink);
-      outline:none; font-size:15px; line-height:1.45;
-      transition: border .2s ease, box-shadow .2s ease;
-    }
+    .input, textarea{ display:block; width:100%; padding: 16px 14px 14px; border-radius: var(--radius-md); border: 1.6px solid var(--stroke); background: #fff; color: var(--ink); outline:none; font-size:15px; line-height:1.45; transition: border .2s ease, box-shadow .2s ease; }
 
     /* Jep pak hije që dallohen kutitë veç e veç */
     .input, textarea{ box-shadow: 0 1px 0 rgba(0,0,0,.02); }
@@ -174,7 +162,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9SPN4YNckyxGnbEuCR8aK-LxzOjYvmNJFRAJxl9gWODNv7JAfpf5dPvu0I6noXd5OjQ/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbhyjfKNqA2jTUEWgB_JRbui2oz9DAMRDX2gcBOsu3GO-h7ybfHLITT6d7RzFV7Xny/exec";
     const form = document.getElementById("contact-form");
     const statusEl = document.getElementById("status");
     const banner = document.getElementById("banner");
