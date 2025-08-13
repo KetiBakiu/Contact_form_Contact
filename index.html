@@ -1,39 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sq">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contact Us</title>
+  <title>Na shkruani një mesazh</title>
   <style>
     :root{
-      --bg: #0b1020;
-      --fg: #0f172a;
-      --card: rgba(255,255,255,.08);
-      --stroke: rgba(255,255,255,.18);
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --primary: #6ee7f9;    /* cyan */
-      --accent:  #a78bfa;    /* violet */
-      --danger:  #fca5a5;
-      --success: #86efac;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      /* Palette */
+      --primary: #ced998;   /* requested green */
+      --primary-2: #b8c480; /* darker companion */
+      --ink: #1b1f22;       /* text */
+      --muted: #5b6368;     /* secondary text */
+      --bg-1: #fbfdf6;      /* light base */
+      --bg-2: #f3f8e5;      /* light tint */
+      --card: #ffffff;      /* card background */
+      --stroke: #e6edd1;    /* soft border */
+      --shadow: 0 10px 30px rgba(40, 60, 0, .08);
       --radius-xl: 18px;
       --radius-md: 12px;
     }
 
-    /* === Page background with soft gradient === */
+    /* Page: airy, light background with soft green blobs */
     body{
       margin:0; min-height:100svh; display:grid; place-items:center;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background: radial-gradient(1200px 800px at 80% -10%, rgba(103,232,249,.12), transparent 60%),
-                  radial-gradient(1000px 800px at -10% 110%, rgba(167,139,250,.14), transparent 60%),
-                  linear-gradient(180deg, #0b1020, #0a0f1a);
+      color: var(--ink);
+      background:
+        radial-gradient(1000px 600px at 85% -10%, rgba(206,217,152,.28), transparent 60%),
+        radial-gradient(900px 600px at -10% 110%, rgba(184,196,128,.22), transparent 60%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2));
       padding: 32px;
     }
 
-    /* === Container === */
-    .wrap { width:min(960px, 100%); }
+    .wrap{ width:min(960px, 100%); }
 
     .card{
       position:relative;
@@ -41,102 +40,84 @@
       border: 1px solid var(--stroke);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px) saturate(120%);
-      -webkit-backdrop-filter: blur(10px) saturate(120%);
       overflow: clip;
     }
 
-    .header{
-      padding: 28px 28px 0 28px;
-      display:flex; align-items:center; gap:14px;
-    }
-    .logo{ width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: 0 8px 20px rgba(79,70,229,.35); }
+    .header{ padding: 28px 28px 0; display:flex; align-items:center; gap:14px; }
+    .logo{ width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, var(--primary), var(--primary-2)); box-shadow: 0 8px 20px rgba(111,128,0,.15); }
     .titleBox{ flex:1; }
     h1{ font-size: clamp(22px, 2.4vw, 30px); line-height:1.2; margin:0; }
     .subtitle{ margin:6px 0 0; color: var(--muted); font-size:14px; }
+    .accent-bar{ height:3px; width:100%; margin:18px 0 0; background: linear-gradient(90deg, var(--primary), var(--primary-2)); opacity:.95; border-radius: 999px; }
 
-    /* Accent border */
-    .accent-bar{
-      height:3px; width:100%; margin:18px 0 0; background: linear-gradient(90deg, var(--primary), var(--accent)); opacity:.9;
-    }
-
-    /* === Form === */
     form{ padding: 28px; display:grid; gap:18px; }
 
     .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
-    @media (max-width: 720px){
-      .grid{ grid-template-columns: 1fr; }
-    }
+    @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; } }
 
     .field{ position:relative; }
     .input, textarea{
       width:100%;
       padding: 16px 14px 14px;
       border-radius: var(--radius-md);
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(8,12,24,.55);
-      color: var(--text);
-      outline:none; font-size:15px; line-height:1.4;
+      border:1px solid var(--stroke);
+      background: #fff;
+      color: var(--ink);
+      outline:none; font-size:15px; line-height:1.45;
       transition: border .2s ease, box-shadow .2s ease, background .2s ease;
     }
     .input::placeholder, textarea::placeholder{ color: transparent; }
 
-    /* Floating label */
     .label{
       position:absolute; left:12px; top:12px; padding:0 6px;
       transform-origin:left top; pointer-events:none;
       color: var(--muted); background: transparent;
       transition: transform .18s ease, color .18s ease, background .18s ease;
     }
-    .input:focus, textarea:focus{ border-color: rgba(167,139,250,.8); box-shadow: 0 0 0 3px rgba(167,139,250,.18); background: rgba(12,18,36,.65); }
+
+    .input:focus, textarea:focus{
+      border-color: color-mix(in oklab, var(--primary) 60%, #7a8742 0%);
+      box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 30%, transparent);
+      background: #fff;
+    }
 
     .input:not(:placeholder-shown) + .label,
     textarea:not(:placeholder-shown) + .label,
     .input:focus + .label,
     textarea:focus + .label{
-      transform: translateY(-12px) scale(.85);
-      background: linear-gradient(180deg, rgba(11,16,32,1), rgba(11,16,32,.6));
-      color: #d1d5db;
+      transform: translateY(-12px) scale(.86);
+      background: var(--card);
+      color: #3c4036;
     }
 
-    textarea{ min-height: 130px; resize: vertical; }
+    textarea{ min-height: 140px; resize: vertical; }
 
-    /* Helper text */
     .hint{ font-size: 12px; color: var(--muted); margin-top: 6px; }
 
-    /* Actions */
-    .actions{ display:flex; align-items:center; gap:12px; margin-top: 6px; }
+    .actions{ display:flex; align-items:center; gap:12px; margin-top: 6px; flex-wrap: wrap; }
     .btn{
       appearance:none; border:0; cursor:pointer; user-select:none;
       padding: 12px 18px; border-radius: 999px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: #0b1020; font-weight: 700; letter-spacing:.2px; font-size: 15px;
-      box-shadow: 0 10px 24px rgba(79,70,229,.35), inset 0 0 0 1px rgba(255,255,255,.35);
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #24310b; font-weight: 700; letter-spacing:.2px; font-size: 15px;
+      box-shadow: 0 8px 20px rgba(110,130,20,.20), inset 0 0 0 1px rgba(255,255,255,.6);
       transition: transform .12s ease, filter .2s ease, box-shadow .2s ease;
     }
-    .btn:hover{ filter: brightness(1.08); box-shadow: 0 14px 34px rgba(79,70,229,.45), inset 0 0 0 1px rgba(255,255,255,.35); }
+    .btn:hover{ filter: brightness(1.05); box-shadow: 0 12px 28px rgba(110,130,20,.26), inset 0 0 0 1px rgba(255,255,255,.65); }
     .btn:active{ transform: translateY(1px); }
     .btn[disabled]{ opacity:.6; cursor:not-allowed; }
 
     .status{ font-size: 14px; color: var(--muted); }
 
-    /* Banner for success/error */
     .banner{ display:none; align-items:center; gap:10px; border-radius: 12px; padding: 12px 14px; border:1px solid; }
     .banner.show{ display:flex; }
-    .banner.success{ background: rgba(22,101,52,.25); border-color: rgba(34,197,94,.35); color:#d1fae5; }
-    .banner.error{ background: rgba(127,29,29,.25); border-color: rgba(239,68,68,.4); color:#fee2e2; }
-
-    /* Subtle decorative glow */
-    .glow{ position:absolute; inset:-2px; pointer-events:none; filter: blur(20px); opacity:.28; z-index:-1;
-      background: radial-gradient(600px 140px at 20% 0%, var(--primary), transparent 60%),
-                  radial-gradient(600px 140px at 80% 0%, var(--accent), transparent 60%);
-    }
+    .banner.success{ background: #f0f9eb; border-color: #cce3b0; color:#305419; }
+    .banner.error{ background: #fff3f3; border-color: #f3c2c2; color:#7a2c2c; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="glow" aria-hidden="true"></div>
       <div class="header">
         <div class="logo" aria-hidden="true"></div>
         <div class="titleBox">
@@ -186,7 +167,7 @@
   </div>
 
   <script>
-    // Replace with your Apps Script Web App URL
+    // Vendos URL-në e Web App nga Google Apps Script
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9SPN4YNckyxGnbEuCR8aK-LxzOjYvmNJFRAJxl9gWODNv7JAfpf5dPvu0I6noXd5OjQ/exec";
 
     const form = document.getElementById("contact-form");
@@ -199,7 +180,6 @@
       banner.className = `banner show ${type}`;
       banner.textContent = msg;
     }
-
     function disableForm(disabled){ submitBtn.disabled = disabled; }
 
     function validate(){
