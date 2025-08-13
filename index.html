@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Form</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+      background: #f7f7f7;
+    }
+    form#contact-form {
+      background: #fff;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    form#contact-form h2 {
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+    form#contact-form p {
+      margin-bottom: 20px;
+      color: #666;
+    }
+    .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    input, textarea, button {
+      font-size: 14px;
+    }
+    input, textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    button {
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease, opacity 0.2s ease;
+    }
+    button:hover { background: #333; }
+    button[disabled] { opacity: 0.6; cursor: not-allowed; }
+    .status {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <form id="contact-form" novalidate>
+    <h2>Send Us a Message</h2>
+    <p>Please fill in the form below to get in touch with us.</p>
+
+    <div class="form-row">
+      <input type="text" name="firstName" placeholder="First name" required />
+      <input type="text" name="lastName" placeholder="Last name" required />
+    </div>
+
+    <div class="form-row">
+      <input type="email" name="email" placeholder="Email address" required />
+      <input type="tel" name="phone" placeholder="Phone Number" />
+    </div>
+
+    <div class="form-row">
+      <textarea name="message" placeholder="Message" required></textarea>
+    </div>
+
+    <button type="submit" id="submitBtn">Submit</button>
+    <div class="status" id="status"></div>
+  </form>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-NDcRpqhh9v3TgRVRpnGUqLAvvTTc9SrPb62CmVCQUdtgLUIH1-W6IRdDBdybSZws/exec";
+
+    const form = document.getElementById("contact-form");
+    const statusEl = document.getElementById("status");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function setStatus(msg) { statusEl.textContent = msg; }
+    function disableForm(disabled) { submitBtn.disabled = disabled; }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setStatus("");
+
+      // Basic client-side validation
+      if (!form.firstName.value.trim() ||
+          !form.lastName.value.trim() ||
+          !form.email.value.trim() ||
+          !form.message.value.trim()) {
+        setStatus("Please complete all required fields.");
+        return;
+      }
+
+      const payload = new URLSearchParams({
+        firstName: form.firstName.value.trim(),
+        lastName:  form.lastName.value.trim(),
+        email:     form.email.value.trim(),
+        phone:     form.phone.value.trim(),
+        message:   form.message.value.trim()
+      });
+
+      try {
+        disableForm(true);
+        setStatus("Submitting…");
+
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: payload
+        });
+
+        const text = await res.text();
+        setStatus(text || "Form submitted.");
+        if (res.ok) form.reset();
+      } catch (err) {
+        setStatus("Error: " + err.message);
+      } finally {
+        disableForm(false);
+      }
+    });
+  </script>
+</body>
+</html>
