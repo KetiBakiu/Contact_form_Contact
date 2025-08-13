@@ -13,7 +13,8 @@
       --bg-1: #fbfdf6;
       --bg-2: #f3f8e5;
       --card: #ffffff;
-      --stroke: #e6edd1;
+      --stroke: #e0e8c7;   /* pak më e dukshme se më parë */
+      --stroke-strong: #c9d59e;
       --shadow: 0 10px 30px rgba(40, 60, 0, .08);
       --radius-xl: 18px;
       --radius-md: 12px;
@@ -46,23 +47,33 @@
     .subtitle{ margin:6px 0 0; color: var(--muted); font-size:14px; }
     .accent-bar{ height:3px; width:100%; margin:18px 0 0; background: linear-gradient(90deg, var(--primary), var(--primary-2)); border-radius: 999px; }
 
-    form{ padding: 28px; display:grid; gap:18px; }
+    form{ padding: 28px; display:grid; gap:22px; }
 
-    /* Fixed grid gap and field separation */
-    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:24px; }
-    @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; } }
+    /* === GRID FIX: clear separation between columns and rows === */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 28px;   /* më i madh që të mos takohen */
+      row-gap: 18px;
+    }
+    @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; column-gap: 0; } }
 
     .field{ position:relative; }
+
     .input, textarea{
       width:100%;
       padding: 16px 14px 14px;
       border-radius: var(--radius-md);
-      border:1px solid var(--stroke);
+      border: 1.5px solid var(--stroke); /* pak më e trashë për kontrast */
       background: #fff;
       color: var(--ink);
       outline:none; font-size:15px; line-height:1.45;
       transition: border .2s ease, box-shadow .2s ease;
     }
+
+    /* Jep pak hije që dallohen kutitë veç e veç */
+    .input, textarea{ box-shadow: 0 1px 0 rgba(0,0,0,.02); }
+
     .input::placeholder, textarea::placeholder{ color: transparent; }
 
     .label{
@@ -70,11 +81,12 @@
       transform-origin:left top; pointer-events:none;
       color: var(--muted);
       transition: transform .18s ease, color .18s ease, background .18s ease;
+      background: transparent;
     }
 
     .input:focus, textarea:focus{
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(206,217,152,.3);
+      border-color: var(--stroke-strong);
+      box-shadow: 0 0 0 4px rgba(206,217,152,.28);
     }
 
     .input:not(:placeholder-shown) + .label,
