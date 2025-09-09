@@ -51,7 +51,7 @@
       background-image: url("https://drive.google.com/uc?export=view&id=18B5ifpUZ0SJi9wWKiE5Yc2hSQgB9vH63");
       background-repeat: no-repeat;
       background-position: center;
-      background-size: contain; /* keeps aspect ratio */
+      background-size: contain;
       box-shadow: 0 8px 20px rgba(111,128,0,.15);
     }
 
@@ -62,7 +62,6 @@
 
     form{ padding: 28px; display:grid; gap:22px; }
 
-    /* === GRID FIX: clear separation between columns and rows === */
     .grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 32px; }
     @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; gap: 16px; } }
 
@@ -187,13 +186,22 @@
 
     function setStatus(msg){ statusEl.textContent = msg; }
     function showBanner(type, msg){ banner.className = `banner show ${type}`; banner.textContent = msg; }
+    function clearBanner(){ banner.className = "banner"; banner.textContent = ""; }
     function disableForm(disabled){ submitBtn.disabled = disabled; }
 
     function validate(){
       if(!form.firstName.value.trim()) return "Shkruani emrin.";
       if(!form.lastName.value.trim())  return "Shkruani mbiemrin.";
-      if(!form.email.value.trim())     return "Shkruani email-in.";
-      if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(form.email.value.trim())) return "Email i pavlefshëm.";
+
+      const email = form.email.value.trim();
+      if(!email) return "Shkruani email-in.";
+
+      // FIX: përdorim escape të sakta në literal regex
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+
+      // Rrjet sigurie: nëse HTML5 e shënon si të pavlefshëm
+      if(!emailOk || !form.email.checkValidity()) return "Email i pavlefshëm.";
+
       if(!form.message.value.trim())   return "Shkruani mesazhin.";
       return "";
     }
@@ -201,7 +209,7 @@
     form.addEventListener("submit", async (e)=>{
       e.preventDefault();
       setStatus("");
-      banner.className = "banner"; banner.textContent = "";
+      clearBanner();
 
       const err = validate();
       if(err){ showBanner("error", err); return; }
@@ -219,8 +227,12 @@
         setStatus("Duke u dërguar…");
         const res = await fetch(SCRIPT_URL, { method: "POST", body: payload });
         const text = await res.text();
-        if(res.ok){ form.reset(); showBanner("success", text || "Mesazhi u dërgua me sukses."); }
-        else { showBanner("error", text || "Ndodhi një gabim gjatë dërgimit."); }
+        if(res.ok){
+          form.reset();
+          showBanner("success", text || "Mesazhi u dërgua me sukses.");
+        }else{
+          showBanner("error", text || "Ndodhi një gabim gjatë dërgimit.");
+        }
       }catch(err){
         showBanner("error", "Gabim: " + err.message);
       }finally{
